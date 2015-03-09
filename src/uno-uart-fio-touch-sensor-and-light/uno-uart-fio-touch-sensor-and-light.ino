@@ -33,6 +33,7 @@ Thread readDataThread = Thread();
 const int analogInPin = A2; 
 int led1 = 10; //ledpin for receiving pressure
 int led2 = 11; //ledpin for local pressure
+int led3 = 12; //ledpin for the biglight receiving pressure
 int light1= 0; //current light state of receiving pressure
 int light2= 0; //current light state of local pressure
 volatile int light1be= 0; //received light state of receiving pressure - transition to this state
@@ -95,11 +96,19 @@ void smoothLight1Callback(){
   Timer1.stop();
   if (light1==light1be)
     smoothLight1Thread.enabled=false;
-  if(light1>light1be) 
-    analogWrite(led1, --light1);
+  if(light1>light1be){ 
+    light1--;
+    analogWrite(led1, light1);
+    analogWrite(led3, light1);
+  }
 
-  if(light1<light1be) 
-    analogWrite(led1, ++light1);
+  if(light1<light1be) {
+    light1++;
+    analogWrite(led1, light1);
+    analogWrite(led3, light1);
+    
+
+  }
     
   Timer1.resume();  
 }
